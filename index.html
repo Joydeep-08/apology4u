@@ -703,7 +703,7 @@ async function finalizeSurprise(){
     }
     state.gifUrl = photo2Url || BOUQUET_IMG;
 
-    const { error: dbErr } = await sb.from('friendship_day').insert({
+    const { data: inserted, error: dbErr } = await sb.from('friendship_day').insert({
       recipient: state.recipient,
       sender: state.sender,
       message: state.message,
@@ -713,12 +713,10 @@ async function finalizeSurprise(){
       price: currentPrice,
       coupon: appliedCoupon,
       paid: true
-    });
+    }).select('id').single();
     if(dbErr) throw dbErr;
 
-    const payload = { r: state.recipient, s: state.sender, m: state.message, p: photoUrl, g: state.gifUrl };
-    const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
-    const link = `${location.origin}${location.pathname}?d=${encoded}`;
+    const link = `${location.origin}${location.pathname}?id=${inserted.id}`;
     document.getElementById('out-link').value = link;
 
     document.getElementById('final-gif').src = state.gifUrl;
@@ -977,32 +975,53 @@ function restartFlow(){
   goTo('step-intake');
 }
 
-/* ---------- viewer mode: ?d=<base64 payload> ---------- */
-(function initViewer(){
-  const params = new URLSearchParams(location.search);
-  const d = params.get('d');
-  if(!d) return;
-  try{
-    const payload = JSON.parse(decodeURIComponent(escape(atob(d))));
-    isSharedView = true;
-    state.recipient = payload.r;
-    state.sender = payload.s;
-    state.message = payload.m;
-    state.gifUrl = payload.g || BOUQUET_IMG;
-    state.letterPhotoUrl = payload.p || null;
-    document.getElementById('final-gif').src = state.gifUrl;
-    updateFinalPhoto(payload.p);
-    document.getElementById('final-caption').textContent = `${payload.s} & ${payload.r}`;
+/* ---------- viewer mode: ?id=<row id> (new) or ?d=<base64 payload> (legacy links) ---------- */
+function renderSharedCard(recipient, sender, message, photo, gif){
+  isSharedView = true;
+  state.recipient = recipient;
+  state.sender = sender;
+  state.message = message;
+  state.gifUrl = gif || BOUQUET_IMG;
+  state.letterPhotoUrl = photo || null;
+  document.getElementById('final-gif').src = state.gifUrl;
+  updateFinalPhoto(photo);
+  document.getElementById('final-caption').textContent = `${sender} & ${recipient}`;
 
-    document.getElementById('final-actions').innerHTML = '<button class="btn-ghost" onclick="goTo(\'step-balloons\')">← Back</button>';
-    document.getElementById('final-restart').style.display = 'none';
-    document.getElementById('edit-btn-envelope').style.display = 'none';
-    document.getElementById('edit-btn-letter').style.display = 'none';
-    document.getElementById('edit-btn-balloons').style.display = 'none';
-    document.getElementById('pageHeader').style.display = 'none';
-    goTo('step-envelope');
-  }catch(err){
-    console.error('Bad link payload', err);
+  document.getElementById('final-actions').innerHTML = '<button class="btn-ghost" onclick="goTo(\'step-balloons\')">← Back</button>';
+  document.getElementById('final-restart').style.display = 'none';
+  document.getElementById('edit-btn-envelope').style.display = 'none';
+  document.getElementById('edit-btn-letter').style.display = 'none';
+  document.getElementById('edit-btn-balloons').style.display = 'none';
+  document.getElementById('pageHeader').style.display = 'none';
+  goTo('step-envelope');
+}
+
+(async function initViewer(){
+  const params = new URLSearchParams(location.search);
+  const id = params.get('id');
+  const d = params.get('d');
+
+  if(id){
+    try{
+      const { data, error } = await sb.from('friendship_day')
+        .select('recipient, sender, message, photo, gif_url')
+        .eq('id', id)
+        .single();
+      if(error) throw error;
+      renderSharedCard(data.recipient, data.sender, data.message, data.photo, data.gif_url);
+    }catch(err){
+      console.error('Could not load surprise', err);
+    }
+    return;
+  }
+
+  if(d){
+    try{
+      const payload = JSON.parse(decodeURIComponent(escape(atob(d))));
+      renderSharedCard(payload.r, payload.s, payload.m, payload.p, payload.g);
+    }catch(err){
+      console.error('Bad link payload', err);
+    }
   }
 })();
 </script>
