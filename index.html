@@ -922,7 +922,21 @@ let typing = false;
 function startLetterStep(){
   document.getElementById('letter-name').textContent = state.recipient;
   document.getElementById('letter-sender').textContent = state.sender;
+  setLetterPhoto();
   typeLetter(state.message);
+}
+
+function setLetterPhoto(){
+  const img = document.getElementById('letter-photo');
+  const url = (isSharedView ? state.letterPhotoUrl : (photoDataUrl || photoDataUrl2)) || BOUQUET_IMG;
+  img.src = url;
+  img.style.display = 'block';
+  img.parentElement.style.background = 'none';
+  img.onerror = () => {
+    img.style.display = 'none';
+    img.parentElement.style.background = 'var(--sky-soft)';
+    img.parentElement.innerHTML = '<span style="font-size:40px">🤝</span>';
+  };
 }
 
 function typeLetter(txt){
@@ -976,6 +990,7 @@ function restartFlow(){
     state.sender = payload.s;
     state.message = payload.m;
     state.gifUrl = payload.g || BOUQUET_IMG;
+    state.letterPhotoUrl = payload.p || null;
     document.getElementById('final-gif').src = state.gifUrl;
     updateFinalPhoto(payload.p);
     document.getElementById('final-caption').textContent = `${payload.s} & ${payload.r}`;
