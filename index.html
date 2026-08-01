@@ -928,8 +928,7 @@ function startLetterStep(){
 
 function setLetterPhoto(){
   const img = document.getElementById('letter-photo');
-  const url = (isSharedView ? state.letterPhotoUrl : (photoDataUrl || photoDataUrl2)) || BOUQUET_IMG;
-  img.src = url;
+  img.src = BOUQUET_IMG;
   img.style.display = 'block';
   img.parentElement.style.background = 'none';
   img.onerror = () => {
