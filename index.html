@@ -391,11 +391,8 @@ body {
     <section id="step-letter" class="step">
       <button class="btn-ghost btn-sm" id="edit-btn-letter" style="align-self:flex-start;margin-bottom:12px" onclick="restartFlow()">← Back to form</button>
       <div style="display:flex;flex:1;min-height:280px">
-        <div style="width:36%;background:var(--sky-soft);border:2.5px solid var(--ink);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-right:14px">
-          <div style="text-align:center;padding:10px">
-            <div style="font-size:34px;margin-bottom:8px">🌻</div>
-            <div style="width:60px;height:14px;background:repeating-linear-gradient(45deg,var(--coral),var(--coral) 6px,#FFB18E 6px,#FFB18E 12px);border:1.5px solid var(--ink);margin:0 auto;transform:rotate(-4deg)"></div>
-          </div>
+        <div style="width:36%;background:var(--sky-soft);border:2.5px solid var(--ink);border-radius:12px;overflow:hidden;margin-right:14px;display:flex;align-items:center;justify-content:center">
+          <img id="letter-photo" src="" alt="" style="width:100%;height:100%;object-fit:cover;display:block">
         </div>
         <div style="width:64%;display:flex;flex-direction:column">
           <div style="font-family:'Baloo 2',sans-serif;font-size:19px;font-weight:700;color:var(--ink);margin-bottom:12px">Dear <span id="letter-name"></span>,</div>
