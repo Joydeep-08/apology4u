@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>💌 A Little Something For Her</title>
+<title>💌 A Little Something For Him</title>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Work+Sans:wght@400;500;600;700&family=Caveat:wght@500;600;700&display=swap" rel="stylesheet">
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -262,9 +262,9 @@ body {
 <div class="page">
   <div class="header" id="pageHeader">
     <span class="tie-icon">💌</span>
-    <div class="header-eyebrow">Just Because · Just For Her</div>
+    <div class="header-eyebrow">Just Because · Just For Him</div>
     <h1>A Little Something<br>For <em>You.</em></h1>
-    <p class="header-sub">A little note, a photo, and something extra sweet at the end — preview it exactly as she'll see it, then send a link. No app, no login, just opens right in her browser.</p>
+    <p class="header-sub">A little note, a photo, and something extra sweet at the end — preview it exactly as he'll see it, then send a link. No app, no login, just opens right in his browser.</p>
   </div>
 
   <div class="card">
@@ -274,21 +274,21 @@ body {
     <!-- ============ STEP: INTAKE ============ -->
     <section id="step-intake" class="step active fade-up">
       <div class="section-gap">
-        <div class="section-label">What do you call her</div>
+        <div class="section-label">What do you call him</div>
         <div class="chips" id="relationChips">
           <button type="button" class="chip selected" data-value="Babe">Babe</button>
           <button type="button" class="chip" data-value="Jaan">Jaan</button>
           <button type="button" class="chip" data-value="Love">Love</button>
-          <button type="button" class="chip" data-value="My Girl">My Girl</button>
+          <button type="button" class="chip" data-value="My Guy">My Guy</button>
           <button type="button" class="chip" data-value="Baby">Baby</button>
-          <button type="button" class="chip" data-value="Sunshine">Sunshine</button>
+          <button type="button" class="chip" data-value="Handsome">Handsome</button>
           <button type="button" class="chip" data-value="__custom">Other</button>
         </div>
-        <input type="text" id="relationCustom" placeholder="Type what you call her" style="display:none; margin-bottom:14px;">
+        <input type="text" id="relationCustom" placeholder="Type what you call him" style="display:none; margin-bottom:14px;">
 
         <div class="field">
           <label>Your name</label>
-          <input type="text" id="senderName" placeholder="So she knows it's from you" maxlength="40">
+          <input type="text" id="senderName" placeholder="So he knows it's from you" maxlength="40">
         </div>
       </div>
 
@@ -367,7 +367,7 @@ body {
     <!-- ============ STEP: PAYMENT ============ -->
     <section id="step-payment" class="step">
       <div style="font-family:'Baloo 2',sans-serif;font-size:22px;font-weight:700;color:var(--ink);text-align:center;margin-bottom:6px">Almost there</div>
-      <p style="text-align:center;color:var(--ink-soft);font-size:12.5px;margin-bottom:26px">Unlock the link to send it to her.</p>
+      <p style="text-align:center;color:var(--ink-soft);font-size:12.5px;margin-bottom:26px">Unlock the link to send it to him.</p>
 
       <div style="background:var(--yellow-soft);border:2px solid var(--ink);border-radius:14px;padding:20px;text-align:center;margin-bottom:18px">
         <div style="font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-soft);margin-bottom:6px">Total</div>
@@ -393,7 +393,7 @@ body {
     <!-- ============ STEP: LINK ============ -->
     <section id="step-linkout" class="step" style="align-items:center;text-align:center">
       <div style="font-family:'Baloo 2',sans-serif;font-size:22px;font-weight:700;color:var(--ink);margin-bottom:10px" class="fade-up">It's ready 💌</div>
-      <p style="color:var(--ink-soft);font-size:12.5px;margin-bottom:20px">Copy this link and send it to her.</p>
+      <p style="color:var(--ink-soft);font-size:12.5px;margin-bottom:20px">Copy this link and send it to him.</p>
       <div style="display:flex;gap:8px;width:100%">
         <input id="out-link" class="inp" readonly style="font-size:11px" />
         <button class="btn btn-sm" onclick="copyLink()">Copy</button>
@@ -493,7 +493,7 @@ body {
 
 <script>
 /* ---------- config ----------
-   GF Day's own Supabase project + Razorpay key.
+   BF Day's own Supabase project + Razorpay key.
    NOTE: double-check these are from the SAME Supabase project (URL + anon key ref
    should match) before wiring up the table/bucket — worth re-copying both fresh
    from the project's API settings page if you haven't already. */
@@ -722,7 +722,7 @@ function handlePayment(){
     key: RAZORPAY_KEY,
     amount: currentPrice * 100,
     currency: 'INR',
-    name: "A Little Something For Her",
+    name: "A Little Something For Him",
     description: `Surprise for ${state.recipient}`,
     handler: function(response){ finalizeSurprise(); },
     theme: { color: '#FF5C8A' }
@@ -810,11 +810,11 @@ let allPoppedFlag = false;
 
 /* GIF bank — one per balloon, in the order the messages appear. */
 const GIFS = [
-  'https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExeHE1ZW5hd3Y4djdiZTJpbmU2c3d6NGFqYmZ6Y3B6b3llaGpqaHRoNCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/TfWYTn19Azw9TT9ac6/giphy.gif',
-  'https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExM2dqbmJjYTVhazdjZjl4anV6cnpjY20zYnRocGFmMXdqdmQyYjJpZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/19ThCZEUu9SeidvkDZ/giphy.gif',
-  'https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExeWxkZjhmdWFocG53aHZudGM2NzN6c21qZTl2NXhlbTg4M3d0ZWh3NCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/laZowFUwqx8ckmfGzM/giphy.gif',
-  'https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExMzhka2xqZnJpMWV3d2pldDhtdGc5Z3J4NjFzM2w0aHg0NHQ0amdvaCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/uyfgCPQeCjYMVxt2m3/giphy.gif',
-  'https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExZTdkMXdubWEwdTY4b2dseWJvNGdqMmtjcHBlbTlubWprOGF4MmVmNSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/H1dxi6xdh4NGQCZSvz/giphy.gif',
+  'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExeXptbWljMTM5ZGh1dXg3bHBzdnJjdHJqNjZrOWU3ZXF5N2pkcWRxdCZlcD12MV9naWZzX3JlbGF0ZWQmY3Q9Zw/LTcau7EnQLhHkxxG2u/giphy.gif',
+  'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMWo1MzM2a2gydWtrbWdtczltOTM3a2w5bXU5cDcwOWd4d29zaGxuZCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/QO6gybBh0d4LLTNn1d/giphy.gif',
+  'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMWo1MzM2a2gydWtrbWdtczltOTM3a2w5bXU5cDcwOWd4d29zaGxuZCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/Ey9c4OTwlZWCuVafkZ/giphy.gif',
+  'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOXQwZjRsY203bzFyMW56a2ZyYjhoczQxM3VqbnNnZXR2NWxsajNseCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/SEgSwox3DSlx7QH4xQ/giphy.gif',
+  'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOXQwZjRsY203bzFyMW56a2ZyYjhoczQxM3VqbnNnZXR2NWxsajNseCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/TjSPQgowhhJdHgvnwA/giphy.gif',
 ];
 
 function preloadGifs(){
