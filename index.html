@@ -121,7 +121,8 @@ background-size:22px 22px,100% 100%,100% 100%,100% 100%,100% 100%;background-att
 .polwrap{display:flex;flex-direction:column;align-items:center;gap:18px}
 .polaroid{background:var(--paper-2);padding:12px;border:3px solid var(--ink);border-radius:6px;max-width:270px;width:82vw;box-shadow:var(--sh);transform:rotate(var(--tilt,0deg));animation:polIn .5s cubic-bezier(.34,1.4,.64,1)}
 @keyframes polIn{from{opacity:0;transform:rotate(var(--tilt,0deg)) scale(.4) translateY(40px)}}
-.polphoto{height:170px;border:2px solid var(--ink);border-radius:3px;background:linear-gradient(135deg,var(--yellow-soft),var(--sky-soft));display:flex;align-items:center;justify-content:center;font-size:4.5rem}
+.polphoto{width:100%;height:220px;border:2px solid var(--ink);border-radius:3px;overflow:hidden;background:linear-gradient(135deg,var(--yellow-soft),var(--sky-soft));display:flex;align-items:center;justify-content:center;font-size:4.5rem}
+.polphoto img{width:100%;height:100%;object-fit:cover;display:block}
 .polcaption{min-height:70px;display:flex;align-items:center;justify-content:center;padding:8px}
 .polmsg{font-family:'Caveat',cursive;font-size:1.2rem;text-align:center;line-height:1.3}
 
@@ -349,7 +350,7 @@ background-size:22px 22px,100% 100%,100% 100%,100% 100%,100% 100%;background-att
 <div id="cardReveal">
   <div class="polwrap">
     <div class="polaroid" id="polCard">
-      <div class="polphoto" id="polEmoji"></div>
+      <div class="polphoto" id="polPhotoWrap"><img id="polImg" src="" alt=""></div>
       <div class="polcaption"><div class="polmsg" id="polMsg"></div></div>
     </div>
     <button class="btn" id="polNextBtn" onclick="closeBalloonCard()">Pop another ↗</button>
@@ -539,6 +540,16 @@ const TILTS=[-3,2.5,-4,3,-2],SPKC=['#FFE3EC','#FFC1D6','#F1E4FF','#D9B3FF','#F7D
 const EMOJIS=['🥺','🥀','💌','🫶','🕊️'];
 let balloonMsgs=[],leftToPop=0,allPoppedFlag=false;
 
+/* GIF bank — one per balloon, same ones as the old file, in the same order. */
+const GIFS=[
+  'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExeXptbWljMTM5ZGh1dXg3bHBzdnJjdHJqNjZrOWU3ZXF5N2pkcWRxdCZlcD12MV9naWZzX3JlbGF0ZWQmY3Q9Zw/LTcau7EnQLhHkxxG2u/giphy.gif',
+  'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMWo1MzM2a2gydWtrbWdtczltOTM3a2w5bXU5cDcwOWd4d29zaGxuZCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/QO6gybBh0d4LLTNn1d/giphy.gif',
+  'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMWo1MzM2a2gydWtrbWdtczltOTM3a2w5bXU5cDcwOWd4d29zaGxuZCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/Ey9c4OTwlZWCuVafkZ/giphy.gif',
+  'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOXQwZjRsY203bzFyMW56a2ZyYjhoczQxM3VqbnNnZXR2NWxsajNseCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/SEgSwox3DSlx7QH4xQ/giphy.gif',
+  'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOXQwZjRsY203bzFyMW56a2ZyYjhoczQxM3VqbnNnZXR2NWxsajNseCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/TjSPQgowhhJdHgvnwA/giphy.gif'
+];
+function preloadGifs(){GIFS.forEach(u=>{const im=new Image();im.src=u})}
+
 function getBalloonMsgs(rel,reasonKey){
   const r=rel.toLowerCase();
   return [
@@ -573,7 +584,7 @@ function playPop(){
 function goToBalloons(){
   typing=false;
   balloonMsgs=getBalloonMsgs(state.recipient||relation,state.reason);
-  goTo('step-balloons');buildBalloons();
+  goTo('step-balloons');preloadGifs();buildBalloons();
 }
 function updateBalloonCounter(){
   const c=document.getElementById('balloon-counter');
@@ -604,7 +615,19 @@ function popBalloon(i,msg,el){
   if(leftToPop<=0){allPoppedFlag=true;nb.textContent='See the end 🥀'}else nb.textContent='Pop another ↗';
   document.getElementById('polCard').style.setProperty('--tilt',TILTS[i%TILTS.length]+'deg');
   document.getElementById('polMsg').textContent=msg;
-  document.getElementById('polEmoji').textContent=EMOJIS[i%EMOJIS.length];
+
+  /* GIF in the polaroid, with emoji fallback if it fails to load */
+  const polImg=document.getElementById('polImg'),polWrap=document.getElementById('polPhotoWrap');
+  polWrap.querySelectorAll('.pol-emoji').forEach(n=>n.remove());
+  polImg.style.display='block';
+  polImg.onerror=()=>{
+    polImg.style.display='none';
+    if(!polWrap.querySelector('.pol-emoji')){
+      const s=document.createElement('span');s.className='pol-emoji';s.textContent=EMOJIS[i%EMOJIS.length];polWrap.appendChild(s);
+    }
+  };
+  polImg.src=GIFS[i%GIFS.length];
+
   document.getElementById('cardReveal').classList.add('show');
 }
 function closeBalloonCard(){
